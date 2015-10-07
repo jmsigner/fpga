@@ -1,0 +1,15 @@
+Package: fpga
+Type: Package
+Title: fast population genetic analysis
+Version: 0.0.0.1
+Date: 2015-10-04
+Author: Johannes Signer
+Maintainer: Johannes Signer <jsigner@gwdg.de>
+Description: Some functions for the fast computation of population genetic
+    measures.
+License: GPL-v3
+LazyData: TRUE
+Suggests:
+    knitr
+VignetteBuilder: knitr
+RoxygenNote: 4.1.1.9000

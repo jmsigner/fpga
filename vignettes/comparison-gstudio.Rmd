@@ -1,0 +1,158 @@
+---
+title: "Vignette Title"
+author: "Johannes Signer, Femke Pflüger, Niko Balkenhol"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Intro
+
+Developements of the `fpga` packages were heavily inspired by `gstudio`. While `gstudio` provides all of the functions and much more use friendliness, we were faced with the challenge to analyse several thousands of indivudals from hunderts of populations and `gstudio` was to slow. This vignette severs as a comparison between `fpga` and `gstudio`.
+
+# Data
+
+We use the `arapat` data from `gstudio`:
+
+```{r}
+library(abind)
+library(fpga)
+library(gstudio)
+
+
+# We have 
+# - 1000 Individuals
+# - with 3 loci
+# - 200 possible allels
+# - in 10 populations
+
+set.seed(111)
+dat0 <- data.frame(
+  pop = factor(as.character(rep(1:9, each = 100))), 
+  loc1 = do.call(c, lapply(split(sample(c(1:100), 900 * 2, TRUE), rep(1:900, each = 2)), locus)), 
+  loc2 = do.call(c, lapply(split(sample(c(200:250), 900 * 2, TRUE), rep(1:900, each = 2)), locus)), 
+  loc3 = do.call(c, lapply(split(sample(c(1:200), 900 * 2, TRUE), rep(1:900, each = 2)), locus))
+)
+
+
+# data for fpga
+x <- lapply(column_class(dat0, class = "locus"), function(i) apply(alleles(dat0[[i]]), 2, as.integer))
+dat1 <- abind(list(sapply(x, function(y) y[, 1]), 
+                  sapply(x, function(y) y[, 2])), along = 3)
+```
+
+# Genetic Metrics
+
+Number of alleles: 
+
+```{r}
+system.time(na0 <- A(dat0))
+system.time(na1 <- n_alls(dat1))
+
+na0$A == na1
+```
+
+Observed heterozygosity:
+
+```{r}
+system.time(ho0 <- Ho(dat0))
+system.time(ho1 <- het_obs(dat1))
+ho0$Ho == ho1
+```
+
+Expected heterozygosity:
+
+```{r}
+system.time(he0 <- He(dat0))
+system.time(he1 <- het_exp(dat1))
+he0$He == he1
+```
+
+
+Effective number of allels:
+
+
+```{r}
+system.time(na0 <- Ae(dat0))
+system.time(na1 <- n_eff_alls(dat1))
+
+na0$Ae == na1
+```
+
+
+## Adding a stratum
+
+All of the above function can be stratified by population, e.g., 
+
+```{r}
+system.time(na0 <- genetic_diversity(dat0, stratum = "pop", mode = "A"))
+system.time(na1 <- n_alls(dat1, dat0[, 1]))
+sum(na0$A) == sum(na1)
+```
+
+
+# Genetic structure
+
+## `gst`
+
+```{r}
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = FALSE, size.correct = FALSE))  ## 0.35 sec
+system.time(gst1 <- gst(dat1, stratum = dat0$pop, size.correct = FALSE))  ## 0.35 sec
+all(gst0$Gst == gst1[1, ])
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = FALSE, size.correct = TRUE))  ## 0.35 sec
+system.time(gst1 <- gst(dat1, stratum = dat0$pop, size.correct = TRUE))  ## 0.35 sec
+all(gst0$Gst == gst1[1, ])
+
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = FALSE))  ## 0.35 sec
+system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = FALSE, what = "gst"))  ## 0.35 sec
+sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
+system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = TRUE, what = "gst"))  ## 0.35 sec
+sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
+```
+
+## `dest`
+
+```{r}
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Dest", pairwise = FALSE, size.correct = FALSE))  ## 0.35 sec
+system.time(gst1 <- dest(dat1, stratum = dat0$pop, size.correct = FALSE))  ## 0.35 sec
+all(gst0$Dest == gst1[1, ])
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Dest", pairwise = FALSE, size.correct = TRUE))  ## 0.35 sec
+system.time(gst1 <- dest(dat1, stratum = dat0$pop, size.correct = TRUE))  ## 0.35 sec
+all(gst0$Dest == gst1[1, ])
+
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = FALSE))  ## 0.35 sec
+system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = FALSE, what = "gst"))  ## 0.35 sec
+sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
+system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = TRUE, what = "gst"))  ## 0.35 sec
+sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
+```
+
+
+# Pairwise genetic structure
+
+## GST
+```{r}
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
+system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, what = "gst", size.correct = TRUE))  ## 0.35 sec
+
+sum(gst0, na.rm = TRUE)
+sum(gst1, na.rm = TRUE)
+
+
+system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
+system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = TRUE, what = "gst"))  ## 0.35 sec
+
+```
+
