@@ -2,7 +2,6 @@
 
 `fpga` aims to provide a fast implementation of some commonly used population genetic metrics. 
 
-
 ## Installation
 
 ```R
