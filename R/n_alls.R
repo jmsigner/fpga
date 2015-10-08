@@ -1,6 +1,6 @@
 #' Population genetic metrics
 #'
-#' Functions to calculate population genetic metrics. For all functions \code{stratum} splits the data set into different populations. If \code{stratum} is missing, one population is assumed. \code{n_alls} returns the number of alleles per population.
+#' Functions to calculate population genetic metrics. For all functions \code{stratum} splits the data set into different populations. If \code{stratum} is missing, one population is assumed. \code{n_alls} returns the number of alleles per population. \code{rarify} rarifies a population genetic metric.
 #' @param x Three dimensional array with individuals, loci and alleles in the first, second and third dimension.
 #' @param stratum Vector of length \code{nrow(x)} indicating population membership.
 #' @name metrics
