@@ -1,6 +1,51 @@
 #' @export
 #' @rdname structure
-gst_p <- function(x, stratum, size.correct = FALSE) {
+
+
+gst_p <- function(x, stratum, size.correct = TRUE) {
+
+  if (missing(stratum)) {
+    stop("stratum needed")
+  }
+
+  if (!is.factor(stratum)) {
+    stratum <- factor(stratum)
+  }
+
+  stratum <- droplevels(stratum)
+  k <- length(levels(stratum))
+
+  if (size.correct) hmean <- harmonic_mean(stratum)
+
+  res <- sapply(1:ncol(x), function(i) {
+
+    hs <- hs(x[, i, ], stratum)
+    ht <- ht(x[, i, ])
+
+    if (size.correct) {
+      hs <- size_correct_hs(hs, hmean)
+      ht <- size_correct_ht(ht, hs, k, hmean)
+    }
+
+    gst_prime <- k * (ht - hs) / ((k * ht - hs) * (1 - hs))
+
+   #   gst_prime <- (1 - hs / ht) * (k - 1 + hs)
+   #   gst_prime <- gst_prime / ((k - 1) * (1 - hs))
+
+
+    c(gst_p = gst_prime, hs = hs, ht = ht)
+  })
+
+  g_hs <- mean(res[2, ], na.rm = TRUE)
+  g_ht <- mean(res[3, ], na.rm = TRUE)
+
+  list(per_locus = res[1, ],
+       global = k * (g_ht - g_hs) / ((k * g_ht - g_hs) * (1 - g_hs)))
+}
+
+
+
+gst_p1 <- function(x, stratum, size.correct = FALSE) {
 
   k <- length(unique(stratum))
 
@@ -40,3 +85,4 @@ gst_p <- function(x, stratum, size.correct = FALSE) {
   }
   res
 }
+

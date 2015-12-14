@@ -3,7 +3,7 @@
 
 nprivate_alleles <- function(x, stratum) {
   w <- split(1:nrow(x), stratum)
-  alls <- lapply(w, function(i, g) unique(as.vector(g[i, , ])), g = gen)
+  alls <- lapply(w, function(i, g) unique(as.vector(g[i, , ])), g = x)
 
   npa <- vector("numeric", length(alls))
 

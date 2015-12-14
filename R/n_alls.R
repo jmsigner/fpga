@@ -13,6 +13,9 @@ n_alls <- function(x, stratum) {
   if (missing(stratum)) {
     apply(x, 2, function(y) length(unique(as.vector(na.omit(y)))))
   } else {
-    sapply(split(1:nrow(x), stratum), function(i, g) n_alls(g[i, , ]), g = x)
+    res <- t(sapply(split(1:nrow(x), stratum), function(i, g) n_alls(g[i, , ]), g = x))
+    colnames(res) <- colnames(x)
+    res
   }
 }
+
