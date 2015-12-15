@@ -9,6 +9,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
+
 # Intro
 
 Developements of the `fpga` packages were heavily inspired by `gstudio`. While `gstudio` provides all of the functions and much more use friendliness, we were faced with the challenge to analyse several thousands of indivudals from hunderts of populations and `gstudio` was to slow. This vignette severs as a comparison between `fpga` and `gstudio`.
@@ -16,6 +18,8 @@ Developements of the `fpga` packages were heavily inspired by `gstudio`. While `
 # Data
 
 We use the `arapat` data from `gstudio`:
+
+
 
 ```{r}
 library(abind)
@@ -98,61 +102,11 @@ sum(na0$A) == sum(na1)
 
 ## `gst`
 
-```{r}
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = FALSE, size.correct = FALSE))  ## 0.35 sec
-system.time(gst1 <- gst(dat1, stratum = dat0$pop, size.correct = FALSE))  ## 0.35 sec
-all(gst0$Gst == gst1[1, ])
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = FALSE, size.correct = TRUE))  ## 0.35 sec
-system.time(gst1 <- gst(dat1, stratum = dat0$pop, size.correct = TRUE))  ## 0.35 sec
-all(gst0$Gst == gst1[1, ])
-
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = FALSE))  ## 0.35 sec
-system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = FALSE, what = "gst"))  ## 0.35 sec
-sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
-system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = TRUE, what = "gst"))  ## 0.35 sec
-sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
-```
 
 ## `dest`
 
-```{r}
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Dest", pairwise = FALSE, size.correct = FALSE))  ## 0.35 sec
-system.time(gst1 <- dest(dat1, stratum = dat0$pop, size.correct = FALSE))  ## 0.35 sec
-all(gst0$Dest == gst1[1, ])
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Dest", pairwise = FALSE, size.correct = TRUE))  ## 0.35 sec
-system.time(gst1 <- dest(dat1, stratum = dat0$pop, size.correct = TRUE))  ## 0.35 sec
-all(gst0$Dest == gst1[1, ])
-
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = FALSE))  ## 0.35 sec
-system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = FALSE, what = "gst"))  ## 0.35 sec
-sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
-system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = TRUE, what = "gst"))  ## 0.35 sec
-sum(gst0, na.rm = TRUE) == sum(gst1, na.rm = TRUE)
-```
 
 
 # Pairwise genetic structure
 
 ## GST
-```{r}
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
-system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, what = "gst", size.correct = TRUE))  ## 0.35 sec
-
-sum(gst0, na.rm = TRUE)
-sum(gst1, na.rm = TRUE)
-
-
-system.time(gst0 <- genetic_structure(dat0, stratum = "pop", mode = "Gst", pairwise = TRUE, size.correct = TRUE))  ## 0.35 sec
-system.time(gst1 <- pw_gstructure(dat1, stratum = dat0$pop, size.correct = TRUE, what = "gst"))  ## 0.35 sec
-
-```
-

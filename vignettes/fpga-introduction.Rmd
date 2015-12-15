@@ -1,0 +1,30 @@
+---
+title: "Introduciton to `fpga`"
+author: "Johannes Signer, Femke Pflüger, Niko Balkenhol"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+# What is the package
+
+# Which data are needed
+
+# Comparison to other packages
+
+# Example 
+
+```{r}
+library(mmod)
+data(nancycats)
+head(nancycats)
+
+```
+
+
+## 
+
