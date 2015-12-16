@@ -1,12 +1,15 @@
 Package: fpga
 Type: Package
 Title: fast population genetic analysis
-Version: 0.0.0.2
-Date: 2015-12-14
+Version: 0.0.0.3
+Date: 2015-12-16
+Imports:
+  abind,
+  stringi
 Author: Johannes Signer
 Maintainer: Johannes Signer <jsigner@gwdg.de>
-Description: Some functions for the fast computation of population genetic
-    measures.
+Description: Functions for computation of population genetic
+    measures optimized for speed.
 License: GPL-v3
 LazyData: TRUE
 Suggests:

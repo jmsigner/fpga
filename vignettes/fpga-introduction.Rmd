@@ -12,19 +12,128 @@ vignette: >
 
 # What is the package
 
+- calculation of pop genetic measures
+
 # Which data are needed
+
+- diploid only
 
 # Comparison to other packages
 
+- optimized for speed at the cost of usabilitiy
+
+- adegenet and gstudio: much more sophisticated representation of genetic data (we only use 3d arrays)
+- both packages offer many more methods than we do
+- because of their useability, there is some overhead interms of data checking, which we try to avoid here
+- PopGenReport most user friendly
+- 
+
 # Example 
 
+## Reading data
+
+### From scratch
+
+It is relatively straight forward to create suitable datat structures from a `data.frame` using the `fpga::df2fpga` function.
+
 ```{r}
-library(mmod)
-data(nancycats)
-head(nancycats)
+# fpga::df2fpga # does not exist yet 
+```
+
+
+### From files 
+
+Currently there only `fstat` is support:
+
+```{r}
+# dat1 <- fpga::read_fstat(file.path(fil)) place file in package
+```
+
+
+### From other packages
+
+`genind` objects from adegenet can be converted using:
+
+
+```{r}
+# fpga::genind2fpga
+```
+
+similarely from `gstudio` 
+
+```{r}
+# fpga::gstudio2fpga
+```
+
+
+# Population genetic measures
+
+We use the `nancycat` data set from the adegenet package for illustration. 
+
+```{r}
+data("nancycats", package = "adegenet")
+dat <- genind2fpga(nancycats)
+str(dat)
+```
+
+
+## Number of allels
+
+```{r}
+n_alls(dat, rownames(dat))
+n_eff_alls(dat, rownames(dat))
+```
+
+## Number of private allels
+
+```{r}
+fpga::nprivate_alleles(dat, rownames(dat))
+```
+
+## Observed and expected heterzygosity
+
+```{r}
+fpga::het_exp(dat)
+fpga::het_obs(dat)
+
+```
+
+In adegenet
+
+```{r}
+summary(nancycats) ## results differ at time, most likely due to missing values
+
+```
+
+By population
+
+```{r}
+fpga::het_exp(dat, rownames(dat))
+fpga::het_obs(dat, rownames(dat))
 
 ```
 
 
-## 
+# Genetic differentiation
+
+## $G_{ST}$
+
+```{r}
+fpga::gst(dat, rownames(dat))
+mmod::Gst_Nei(nancycats)
+```
+
+## $G_{ST}'$
+
+```{r}
+fpga::gst_p(dat, rownames(dat))
+mmod::Gst_Hedrick(nancycats)
+```
+## $D_{ST}'$
+
+```{r}
+fpga::dest(dat, rownames(dat))
+mmod::D_Jost(nancycats)
+```
+
 

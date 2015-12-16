@@ -10,12 +10,7 @@ NULL
 #' @export
 #' @rdname read_genetic_data
 
-
 read_fstat <- function(fn) {
-
-  if (FALSE) {
-    fn <- "~/201_projects/2015_fpga/easypop/simulation1001.dat"
-  }
 
   txt <- scan(fn, what = "character", sep = "\n", quiet = TRUE)
   txt <- gsub("\t", " ", txt, perl = TRUE)
@@ -40,5 +35,3 @@ read_fstat <- function(fn) {
   dimnames(ind)[1:2] <- list(pop, loc_names)
   ind
 }
-
-# read_genepop
