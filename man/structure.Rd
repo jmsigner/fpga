@@ -7,7 +7,7 @@
 \alias{gst_p}
 \alias{pw_gstructure}
 \alias{structure}
-\title{#nstall}
+\title{Population genetic structure}
 \usage{
 dest(x, stratum, size.correct = TRUE)
 
@@ -28,8 +28,6 @@ pw_gstructure(x, stratum, size.correct = TRUE, what = c("gst", "gst_p",
 \item{size.correct}{Logical value indicating whether or not to correct for sample size.}
 }
 \description{
-#nstall
-
 Functions to calculate population genetic differences between populations.
 }
 

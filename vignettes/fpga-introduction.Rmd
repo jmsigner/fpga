@@ -30,6 +30,13 @@ vignette: >
 
 # Example 
 
+Make sure to get the newest version of the package:
+
+```{r, eval = FALSE}
+devtools::install_github("jmsigner/fpga")
+```
+
+
 ## Reading data
 
 ### From scratch
@@ -71,6 +78,7 @@ similarely from `gstudio`
 We use the `nancycat` data set from the adegenet package for illustration. 
 
 ```{r}
+library(fpga)
 data("nancycats", package = "adegenet")
 dat <- genind2fpga(nancycats)
 str(dat)

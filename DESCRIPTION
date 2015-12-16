@@ -5,6 +5,7 @@ Version: 0.0.0.3
 Date: 2015-12-16
 Imports:
   abind,
+  adegenet,
   stringi
 Author: Johannes Signer
 Maintainer: Johannes Signer <jsigner@gwdg.de>
