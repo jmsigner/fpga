@@ -45,6 +45,7 @@ It is relatively straight forward to create suitable datat structures from a `da
 
 ```{r}
 # fpga::df2fpga # does not exist yet 
+
 ```
 
 
@@ -53,7 +54,7 @@ It is relatively straight forward to create suitable datat structures from a `da
 Currently there only `fstat` is support:
 
 ```{r}
-# dat1 <- fpga::read_fstat(file.path(fil)) place file in package
+dat1 <- fpga::read_fstat(system.file('sample-data/simulation_s1e2.dat', package='fpga'))
 ```
 
 
@@ -62,18 +63,95 @@ Currently there only `fstat` is support:
 `genind` objects from adegenet can be converted using:
 
 
-```{r}
-# fpga::genind2fpga
+```{r, eval = FALSE}
+dat <- adegenet::read.fstat(system.file('sample-data/simulation_s1e2.dat', package='fpga'))
+dat2 <- fpga::genind2fpga(dat) # some more checks needed (some alleles are are switched)
 ```
 
 similarely from `gstudio` 
 
+```{r, eval = FALSE}
+fpga::gstudio2fpga
+```
+
+# Population genetic measures (simulated data, no missing data)
+
+We use a simulated data set:
+
 ```{r}
-# fpga::gstudio2fpga
+library(fpga)
+dat0 <- fpga::read_fstat(system.file('sample-data/simulation_s1e2.dat', package='fpga'))
+dat1 <- adegenet::read.fstat(system.file('sample-data/simulation_s1e2.dat', package='fpga'))
 ```
 
 
-# Population genetic measures
+## Number of allels
+
+```{r}
+n_alls(dat0, rownames(dat0))
+n_eff_alls(dat0, rownames(dat0))
+```
+
+## Number of private allels
+
+```{r}
+fpga::nprivate_alleles(dat0, rownames(dat0))
+```
+
+## Observed and expected heterzygosity
+
+```{r}
+fpga::het_exp(dat0)
+fpga::het_obs(dat0)
+```
+
+In adegenet
+
+```{r}
+summary(dat1) 
+```
+
+By population
+
+```{r}
+fpga::het_exp(dat0, rownames(dat0))
+fpga::het_obs(dat0, rownames(dat0))
+```
+
+
+## $G_{ST}$
+
+```{r}
+
+fpga::gst(dat0, rownames(dat0))
+mmod::Gst_Nei(dat1)
+```
+
+## $G_{ST}'$
+
+```{r}
+fpga::gst_p(dat0, rownames(dat0))
+mmod::Gst_Hedrick(dat1)
+```
+## $D_{ST}'$
+
+```{r}
+fpga::dest(dat0, rownames(dat0))
+mmod::D_Jost(dat1)
+```
+
+# Genetic differentiation (real data)
+
+We use the `nancycat` data set from the adegenet package for illustration. 
+
+```{r}
+library(fpga)
+data("nancycats", package = "adegenet")
+dat <- genind2fpga(nancycats)
+str(dat)
+```
+
+## Population genetic measures
 
 We use the `nancycat` data set from the adegenet package for illustration. 
 
@@ -103,14 +181,13 @@ fpga::nprivate_alleles(dat, rownames(dat))
 ```{r}
 fpga::het_exp(dat)
 fpga::het_obs(dat)
-
 ```
 
 In adegenet
 
 ```{r}
+adesum <- summary(nancycats) ## results differ at time, most likely due to missing values
 summary(nancycats) ## results differ at time, most likely due to missing values
-
 ```
 
 By population
@@ -118,7 +195,6 @@ By population
 ```{r}
 fpga::het_exp(dat, rownames(dat))
 fpga::het_obs(dat, rownames(dat))
-
 ```
 
 

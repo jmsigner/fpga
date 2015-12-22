@@ -36,10 +36,35 @@ library(gstudio)
 set.seed(111)
 dat0 <- data.frame(
   pop = factor(as.character(rep(1:9, each = 100))), 
-  loc1 = do.call(c, lapply(split(sample(c(1:100), 900 * 2, TRUE), rep(1:900, each = 2)), locus)), 
-  loc2 = do.call(c, lapply(split(sample(c(200:250), 900 * 2, TRUE), rep(1:900, each = 2)), locus)), 
+  loc1 = do.call(c, lapply(split(sample(c(1:100, NA), 900 * 2, TRUE), rep(1:900, each = 2)), locus)), 
+  loc2 = do.call(c, lapply(split(sample(c(200:250, NA), 900 * 2, TRUE), rep(1:900, each = 2)), locus)), 
   loc3 = do.call(c, lapply(split(sample(c(1:200), 900 * 2, TRUE), rep(1:900, each = 2)), locus))
 )
+
+## With NA
+dat0 <- data.frame(
+  pop = factor(as.character(rep(1:3, each = 10))), 
+  loc1 = do.call(c, lapply(split(sample(c(1:10, NA), 30 * 2, TRUE), rep(1:30, each = 2)), locus)), 
+#  loc2 = do.call(c, lapply(split(sample(c(200:205, NA), 30 * 2, TRUE), rep(1:30, each = 2)), locus)), 
+  loc3 = do.call(c, lapply(split(sample(c(1:4), 30 * 2, TRUE), rep(1:30, each = 2)), locus))
+)
+
+# No NA
+dat0 <- data.frame(
+  pop = factor(as.character(rep(1:3, each = 10))), 
+  loc1 = do.call(c, lapply(split(sample(c(1:10), 30 * 2, TRUE), rep(1:30, each = 2)), locus)), 
+#  loc2 = do.call(c, lapply(split(sample(c(200:205, NA), 30 * 2, TRUE), rep(1:30, each = 2)), locus)), 
+  loc3 = do.call(c, lapply(split(sample(c(1:4), 30 * 2, TRUE), rep(1:30, each = 2)), locus))
+)
+
+head(dat0)
+
+dat2 <- gstudio2fpga(dat0)
+identical(dat1, dat2)
+dat1
+dat2
+dat00 <- fpga2gstudio(dat1)
+identical(dat0, dat00)
 
 
 # data for fpga
@@ -49,6 +74,20 @@ dat1 <- abind(list(sapply(x, function(y) y[, 1]),
 ```
 
 # Genetic Metrics
+
+Frequencies
+
+```{r}
+gstudio::frequencies(dat0)
+freq(dat1)
+
+mean(frequencies(dat0)$Frequency) == mean(freq(dat1)$freq)
+sum(frequencies(dat0)$Frequency) 
+sum(freq(dat1)$freq)
+
+
+```
+
 
 Number of alleles: 
 

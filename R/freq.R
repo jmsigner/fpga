@@ -6,6 +6,7 @@ freq <- function(x, stratum) {
     nloc <- dim(x)[2]
     xx <- lapply(1:nloc, function(i) table(x[, i, ])/n)
     names(xx) <- colnames(x)
+    if (is.null(names(xx))) names(xx) <- paste0("L", 1:length(xx))
     xx <- do.call(rbind, lapply(names(xx), function(y) data.frame(
       locus = y,
       xx[[y]])))

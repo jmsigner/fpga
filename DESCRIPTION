@@ -4,9 +4,8 @@ Title: fast population genetic analysis
 Version: 0.0.0.3
 Date: 2015-12-16
 Imports:
-  abind,
-  adegenet,
-  stringi
+    abind,
+    stringi
 Author: Johannes Signer
 Maintainer: Johannes Signer <jsigner@gwdg.de>
 Description: Functions for computation of population genetic
@@ -14,6 +13,7 @@ Description: Functions for computation of population genetic
 License: GPL-v3
 LazyData: TRUE
 Suggests:
+    adegenet,
     knitr
 VignetteBuilder: knitr
 RoxygenNote: 4.1.1.9000
